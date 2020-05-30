@@ -1,4 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <p>Best Of 5 Games</p>
+    <div class="result">
+        <div id="scoreboard">
+            <h2 class="score" id="playerScore">0</h2>
+            <h2 class="score"  >-</h2>
+            <h2 class="score"  id="computerScore">0</h2>
+        </div>
+        <h3>Choose Rock, Paper or Scissors</h3>
+    </div>
+    <div class="btn">
+        <button class="buttons" id="rock">Rock</button>
+        <button class="buttons" id="paper">Paper</button>
+        <button class="buttons" id="scissors">Scissors</button>
+    </div>
+</body>
 <script>
+
+    let numberOfRoundsPlayed = 1;
+
     function computerPlay(){
         let randomNumber = Math.floor(Math.random() * Math.floor(3));
         switch (randomNumber) { 
@@ -18,70 +45,108 @@
 
     function playRound(playerSelection, computerSelection){
         
+        let playerScore = 0;
+        let computerScore = 0;
+        const h3 = document.querySelector('h3');
+        const h2PlayerScore = document.querySelector("#playerScore");
+        const h2ComputerScore = document.querySelector("#computerScore"); 
+        
 
         playerSelection = playerSelection.toLowerCase();
-
-        if(playerSelection != "rock" && playerSelection != "paper" && playerSelection != "scissors"){
-            return console.error("invalid selection choose rock, paper or scissors");
-        }
         
         if (computerSelection.toLowerCase() === playerSelection.toLowerCase()){
-            return "Draw!"
+            h3.textContent = "Draw!";
         }
 
         if(computerSelection === "Rock"){
             if(playerSelection === "paper"){
                 playerScore++;
-                return "You Win! Paper beats Rock!";
+                h3.textContent = "You Win! Paper beats Rock!";
 
 
             } else if(playerSelection === "scissors"){
                 computerScore++;
-                return "You Lose! Rock beats Scissors!";
+                h3.textContent = "You Lose! Rock beats Scissors!";
 
             }
         } else if (computerSelection === "Scissors"){
 
             if(playerSelection === "rock"){
                 playerScore++;
-                return "You Win! Rock Beats Scissors";
+                h3.textContent = "You Win! Rock Beats Scissors";
 
             } else if (playerSelection === "paper"){
-                computerScore++;
-                return "You Lose! Scissors beats Paper";
+               computerScore++;
+               h3.textContent = "You Lose! Scissors beats Paper";
 
             }
         } else {
             if (playerSelection === "scissors"){
-                playerScore++;
-                return "You Win! Scissors beats Paper";
+               playerScore++;
+               h3.textContent = "You Win! Scissors beats Paper";
 
             } else if (playerSelection === "rock"){
-                computerScore++;
-                return "You Lose! Paper beats Rock";
+               computerScore++;
+               h3.textContent = "You Lose! Paper beats Rock";
             }
         }
+
+
+        playerScore += Number(h2PlayerScore.textContent);
+        computerScore += Number(h2ComputerScore.textContent);
+        h2PlayerScore.textContent = playerScore;
+        h2ComputerScore.textContent = computerScore;
+        numberOfRoundsPlayed++;
     }
 
-    function game(){
-        playerScore = 0;
-        computerScore = 0;
+    function resetGame(){
+        numberOfRoundsPlayed = 0;
+        const h2PlayerScore = document.querySelector("#playerScore");
+        const h2ComputerScore = document.querySelector("#computerScore"); 
+        h2PlayerScore.textContent = 0;
+        h2ComputerScore.textContent = 0;
+        const h3 = document.querySelector('h3');
+        h3.textContent = "Choose Rock, Paper or Scissors";
 
-        for(let i = 0; i < 5; i++){
-            playerSelection = prompt("Rock, Paper or Scissors?");
-            console.log(playRound(playerSelection, computerPlay()));
+    }
+
+    function playPlayerSelection(e){
+        const h3 = document.querySelector('h3');
+        console.log(numberOfRoundsPlayed);
+        if(numberOfRoundsPlayed < 5)
+            playRound(this.textContent, computerPlay());
+        else{
+            setTimeout(function(){h3.textContent = evaluateScore();}, 1000);
+            setTimeout(resetGame, 3000);
         }
 
+    }
+
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.addEventListener('click', playPlayerSelection)
+    })
+
+
+
+    function evaluateScore(){
+        const h2PlayerScore = document.querySelector("#playerScore");
+        const h2ComputerScore = document.querySelector("#computerScore");
+        computerScore = h2ComputerScore.textContent;
+        playerScore = h2PlayerScore.textContent;
+        
+
         if(computerScore > playerScore){
-            console.log(`You Lose ${computerScore} - ${playerScore}`);
+            return "You Lose!";
     
         } else if (playerScore > computerScore){
-            console.log(`You Win ${playerScore} - ${computerScore}`);
+            return "You Win!";
         } else{
-            console.log(`Its a Draw! ${playerScore} - ${computerScore}`)
+            return "It's a Draw";
         }
         
     }
 
 </script>
+</html>
 
